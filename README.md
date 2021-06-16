@@ -1,6 +1,7 @@
 
 # Hasura-Docker
 
+This repo sets up a project to explore early [Hasura](https://hasura.io/) support for MySQL. This is still a release preview !
 
 ## Getting Started
 
