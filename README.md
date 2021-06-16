@@ -16,7 +16,7 @@ In order to develop and test locally you'll need to install the following softwa
 2. [Make](https://www.gnu.org/software/make/)
 
 
-`Docker`and docker compose are required to run the build steps. Build tools, such as aws cli and terraform, are installed in these containers.
+`Docker`and docker compose are required to run the docker containers locally.
 
 `Make` is required to provide the scaffold runner to construct the build commands. Further reading [here](https://opensource.com/article/18/8/what-how-makefile)
 
