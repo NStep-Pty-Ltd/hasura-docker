@@ -1,6 +1,22 @@
 
 version: '3.6'
 services:
+  mysql:
+    image: mysql:8.0.25
+    cap_add:
+      - SYS_NICE
+    ports:
+      - "3306:3306"
+    expose:
+      - 3306
+    volumes:
+    - mysql_data:/var/lib/mysql_docker
+    environment:
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root_password
+
   postgres:
     image: postgres
     restart: always
@@ -10,18 +26,36 @@ services:
     - db_data:/var/lib/postgresql_docker/data
     environment:
       POSTGRES_PASSWORD: postgrespassword
+
   graphql-engine:
-    image: "hasura/graphql-engine:v2.0.0-beta.1"
+    image: "hasura/graphql-engine:pull5655-633f084f"
     ports:
     - "8080:8080"
     depends_on:
     - "postgres"
+    - "mysql"
+    command:
+      - graphql-engine
+      - --mysql-host
+      - mysql
+      - --mysql-port
+      - "3306"
+      - --mysql-user
+      - user
+      - --mysql-password
+      - password
+      - --mysql-dbname
+      - database
+      - serve
     restart: always
     environment:
       HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:postgrespassword@host.docker.internal:5432/postgres
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+      HASURA_GRAPHQL_DEV_MODE: "true"
       ## uncomment next line to set an admin secret
       #HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
       #HASURA_GRAPHQL_JWT_SECRET: '{"type": "HS256", "key": ""}'
 volumes:
   db_data:
+  mysql_data:
